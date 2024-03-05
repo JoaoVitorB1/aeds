@@ -1,125 +1,84 @@
-//faltando terminar
-public class TP1Q05 {
-  static avaliarAnd(String x){
-    if (expressao.startsWith("and")){
-      if()
-    }
-  }
+class TP1Q05 {
 
-  public static void main(String[] args) {
-    String x;
-    boolean fim = false;
-    while (fim == false) {
-      x = MyIO.readLine();
+    public static void main(String[] args) {
+        String x;
+        boolean fim = false;
+        while (fim == false) {
+            x = MyIO.readLine();
 
-      //verifica se a entrada eh 0
-      if (x.length() == 1 && x.charAt(0) == '0') {
-        fim = true;
-      } else {
-        if (x.charAt(0) == '3') {
-          //atribui os valores das variaveis
-          boolean a = x.charAt(2) == '1';
-          boolean b = x.charAt(4) == '1';
-          boolean c = x.charAt(6) == '1';
+            // verifica se a entrada é igual a 0
+            if (x.length() == 1 && x.charAt(0) == '0') {
+                fim = true;
+            } else {
 
-          x = x.replaceAll("A", String.valueOf(x.charAt(2)));
-          x = x.replaceAll("B", String.valueOf(x.charAt(4)));
-          x = x.replaceAll("C", String.valueOf(x.charAt(6)));
+                // VERIFICA SE A EXPRESSAO TEM 2 OU 3 VARIAVEIS
+                // E FAZ AS SUBSTITUICOES DAS LETRAS POR NUMEROS
 
-          String[] partes = x.split(" ");
-          String expressao = "";
-          for (int i = 4; i < partes.length; i++) {
-            expressao += partes[i];
-          }
+                boolean a, b;
+                if (x.charAt(2) == '0') {
+                    x = x.replaceAll("A", "false");
+                } else {
+                    x = x.replaceAll("A", "true");
+                }
+                if (x.charAt(4) == '0') {
+                    x = x.replaceAll("B", "false");
+                } else {
+                    x = x.replaceAll("B", "true");
+                }
+                
+                if (x.charAt(0) == '3') {
+                    boolean c;
 
-          expressao = expressao.replaceAll("0", "false");
-          expressao = expressao.replaceAll("1", "true");
+                    if (x.charAt(3) == '0') {
+                        x = x.replaceAll("C", "false");
+                    } else {
+                        x = x.replaceAll("C", "true");
+                    }
+                }
 
-          System.out.println(expressao);
+                // montagem da expressao booleana
+                String expressao;
+                x = x.replaceAll(" ", "");
+                if (x.charAt(0) == '2') {
+                    char y[] = new char[x.length() - 3];
+                    for (int i = 3, j = 0; i < x.length(); i++, j++) {
+                        y[j] = x.charAt(i);
+                    }
+                    expressao = String.valueOf(y);
+                    System.out.println(expressao);
+
+                } else if (x.charAt(0) == '3') {
+                    char y[] = new char[x.length() - 4];
+                    for (int i = 4, j = 0; i < x.length(); i++, j++) {
+                        y[j] = x.charAt(i);
+                    }
+                    expressao = String.valueOf(y);
+                    System.out.println(expressao);
+
+                }
+            }
         }
-
-        //
-        if (x.charAt(0) == '2') {
-          //atribui os valores das variaveis
-          boolean a = x.charAt(2) == '1';
-          boolean b = x.charAt(4) == '1';
-
-          x = x.replaceAll("A", String.valueOf(x.charAt(2))); //muda todos os A da expressao para o valor da variavel
-          x = x.replaceAll("B", String.valueOf(x.charAt(4))); //muda todos os B da expressao para o valor da variavel
-
-          String[] partes = x.split(" "); //retira o espaco da expressao
-
-          //junta todas as partes da exprassao em uma varialvel
-          String expressao1 = "";
-          for (int i = 3; i < partes.length; i++) {
-            expressao1 += partes[i];
-          }
-          
-
-          expressao1 = expressao1.replaceAll("0", "false"); //altera os valores de 0 para false
-          expressao1 = expressao1.replaceAll("1", "true"); //altera os valores de 1 para true
-
-          boolean resultado = avaliarExpressao(expressao1);
-          if (resultado == true) {
-            System.out.println("1");
-          } else {
-            System.out.println("0");
-          }
-        }
-      }
-    }
-  }
-
-  // Método para avaliar expressões booleanas
-  public static boolean avaliarExpressao(String expressao) {
-    // Remove espaços em branco
-    expressao = expressao.replaceAll("\\s", "");
-
-    // Se a expressão começa com "not", avalia o operando e nega o resultado
-    if (expressao.startsWith("not")) {
-      String operando = expressao.substring(4, expressao.length() - 1); // Remove "not(...)"
-      return !avaliarExpressao(operando);
     }
 
-    // Se a expressão começa com "and", avalia os operandos e aplica a operação "and"
-    if (expressao.startsWith("and")) {
-      String[] operandos = extrairOperandos(
-        expressao.substring(4, expressao.length() - 1)
-      ); // Remove "and(...)"
-      return and(
-        avaliarExpressao(operandos[0]),
-        avaliarExpressao(operandos[1])
-      );
+    // minha parte
+    public static boolean and(boolean a, boolean b) {
+        return a && b;
     }
 
-    // Se a expressão começa com "or", avalia os operandos e aplica a operação "or"
-    if (expressao.startsWith("or")) {
-      String[] operandos = extrairOperandos(
-        expressao.substring(3, expressao.length() - 1)
-      ); // Remove "or(...)"
-      return or(avaliarExpressao(operandos[0]), avaliarExpressao(operandos[1]));
+    public static boolean and(boolean a, boolean b, boolean c) {
+        return a && b && c;
     }
 
-    // Se a expressão é um valor booleano (true ou false), converte para booleano e retorna
-    return Boolean.parseBoolean(expressao);
-  }
+    public static boolean or(boolean a, boolean b) {
+        return a || b;
+    }
 
-  // Método para extrair os operandos de uma expressão
-  private static String[] extrairOperandos(String expressao) {
-    // Divide a expressão em operandos, removendo as vírgulas
-    return expressao.split(",", 2);
-  }
+    public static boolean or(boolean a, boolean b, boolean c) {
+        return a || b || c;
+    }
 
-  // Métodos para operações lógicas "and", "or" e "not"
-  public static boolean and(boolean x, boolean y) {
-    return x && y;
-  }
+    public static boolean not(boolean a) {
+        return !a;
+    }
 
-  public static boolean or(boolean x, boolean y) {
-    return x || y;
-  }
-
-  public static boolean not(boolean x) {
-    return !x;
-  }
 }
