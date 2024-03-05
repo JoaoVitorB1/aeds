@@ -1,3 +1,4 @@
+//nao esta calculando o resultado
 class TP1Q05 {
 
     public static void main(String[] args) {
