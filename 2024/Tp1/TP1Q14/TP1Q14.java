@@ -1,4 +1,6 @@
-class TP1Q05 {
+import java.lang.reflect.Method;
+
+class TP1Q14 {
     static boolean isFim(String x) {
         if (x.length() == 1 && x.charAt(0) == '0') {
             return true;
@@ -91,18 +93,11 @@ class TP1Q05 {
         }
     }
 
-    // verifica de tras pra frente expressoes de 2 variaveis
-    // quando um parentese abre, percorre ate encontrar o parentese fechar
-    // se outro parentese abre, ignora o parentese anterior
-    // quando fecha ele calcula se eh verdadeiro ou falso
     public static String testeDuasVariaveis(String expressao, boolean a, boolean b, int i) {
         boolean resultado;
-        //se i>0 faz a recursao
-        if (i > 0) {
+        if (i > 1) {
 
             char[] temp = expressao.toCharArray();
-            // verifica se o parentese fecha para fazer a operacao
-            //and
             if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 'd') {
                 boolean variavela, variavelb;
                 if (temp[i + 1] == '0') {
@@ -131,9 +126,7 @@ class TP1Q05 {
                 String novaString = new String(temp);
                 novaString = novaString.replaceAll(" ", "");
                 return testeDuasVariaveis(novaString, a, b, novaString.length() - 1);
-            } 
-            //or
-            else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 'r') {
+            } else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 'r') {
                 boolean variavela, variavelb;
                 if (temp[i + 1] == '0') {
                     variavela = false;
@@ -161,9 +154,7 @@ class TP1Q05 {
                 novaString = novaString.replaceAll(" ", "");
                 return testeDuasVariaveis(novaString, a, b, novaString.length() - 1);
 
-            } 
-            //not
-            else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 't') {
+            } else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 't') {
                 boolean variavel;
                 if (temp[i + 1] == '0') {
                     variavel = false;
@@ -184,9 +175,7 @@ class TP1Q05 {
                 String novaString = new String(temp);
                 novaString = novaString.replaceAll(" ", "");
                 return testeDuasVariaveis(novaString, a, b, novaString.length() - 1);
-            } 
-            // se nenhum parentese fecha, chama a funcao com i--
-            else {
+            } else {
                 return testeDuasVariaveis(expressao, a, b, i - 1);
             }
         } else {
@@ -195,21 +184,12 @@ class TP1Q05 {
 
     }
 
-    // verifica de tras pra frente expressoes de 3 variaveis
-    // quando um parentese abre, percorre ate encontrar o parentese fechar
-    // se outro parentese abre, ignora o parentese anterior
-    // quando fecha ele calcula se eh verdadeiro ou falso
     public static String testeTresVariaveis(String expressao, boolean a, boolean b, boolean c, int i) {
         boolean resultado;
-        //se i>0 faz a recursao
         if (i > 0) {
 
             char[] temp = expressao.toCharArray();
-            // verifica se o parentese fecha para fazer a operacao
-
-            // and
             if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 'd') {
-                // verifica se tem 2 variaveis
                 if (temp[i + 4] == ')') {
                     boolean variavela, variavelb;
                     if (temp[i + 1] == '0') {
@@ -238,9 +218,7 @@ class TP1Q05 {
                     String novaString = new String(temp);
                     novaString = novaString.replaceAll(" ", "");
                     return testeTresVariaveis(novaString, a, b, c, novaString.length() - 1);
-                }
-                // and 3 variaveis
-                else {
+                } else {
                     boolean variavela, variavelb, variavelc;
                     if (temp[i + 1] == '0') {
                         variavela = false;
@@ -276,9 +254,7 @@ class TP1Q05 {
                     novaString = novaString.replaceAll(" ", "");
                     return testeTresVariaveis(novaString, a, b, c, novaString.length() - 1);
                 }
-            }
-            // or 2 variaveis
-            else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 'r') {
+            } else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 'r') {
                 if (temp[i + 4] == ')') {
                     boolean variavela, variavelb;
                     if (temp[i + 1] == '0') {
@@ -307,9 +283,7 @@ class TP1Q05 {
                     novaString = novaString.replaceAll(" ", "");
                     return testeTresVariaveis(novaString, a, b, c, novaString.length() - 1);
 
-                }
-                // or 3 variaveis
-                else {
+                } else {
                     boolean variavela, variavelb, variavelc;
                     if (temp[i + 1] == '0') {
                         variavela = false;
@@ -346,9 +320,7 @@ class TP1Q05 {
                     return testeTresVariaveis(novaString, a, b, c, novaString.length() - 1);
                 }
 
-            }
-            // not
-            else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 't') {
+            } else if (expressao.charAt(i) == '(' && expressao.charAt(i - 1) == 't') {
                 boolean variavel;
                 if (temp[i + 1] == '0') {
                     variavel = false;
@@ -369,17 +341,14 @@ class TP1Q05 {
                 String novaString = new String(temp);
                 novaString = novaString.replaceAll(" ", "");
                 return testeTresVariaveis(novaString, a, b, c, novaString.length() - 1);
-            }
-            // se nenhum parentese fecha, chama a funcao com i--
-            else {
-
+            } else {
                 return testeTresVariaveis(expressao, a, b, c, i - 1);
             }
-        } else{        
-            return expressao;
-        }       
+        } else
 
-        
+        {
+            return expressao;
+        }
 
     }
 

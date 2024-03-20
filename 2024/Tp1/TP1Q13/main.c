@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h> //para srand funcionar
 
-//tentantiva para gerar os mesmos numeros
+//tentantiva para gerar os
 unsigned long long next = -1;
 int nextInt()
 {
