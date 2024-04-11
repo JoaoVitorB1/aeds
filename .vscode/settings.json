@@ -13,9 +13,9 @@
     "workbench.editor.labelFormat": "short",
     "explorer.compactFolders": false,
     "breadcrumbs.enabled": false,
-    "workbench.activityBar.location": "hidden",
-    "editor.scrollbar.vertical": "hidden",
-    "editor.scrollbar.horizontal": "hidden",
+    //"workbench.activityBar.location": "hidden",
+    "editor.scrollbar.vertical": "visible",
+    "editor.scrollbar.horizontal": "visible",
     "workbench.statusBar.visible": false,
     "window.titleBarStyle": "native",
     "apc.electron": {
