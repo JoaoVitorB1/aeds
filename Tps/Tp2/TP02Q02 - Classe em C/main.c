@@ -1,281 +1,234 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 #include <stdlib.h>
-typedef struct
-{
-    char id[400];
-    char name[400];
-    //(String), alternate names (Lista)1
-    char house[400];
-    char ancestry[400];
-    char species[400];
-    char patronus[400];
+
+typedef struct {
+    char Lista[500];
+}Lista;
+
+typedef struct {
+    char id[200];
+    char name[200];
+    Lista alternate_names;
+    char house[200];
+    char ancestry[200];
+    char species[200];
+    char patronus[200];
     bool hogwartsStaff;
-    char hogwartsStudent[400];
-    char actorName[400];
+    bool hogwartsStudent;
+    char actorName[200];
     bool alive;
-
+    char dateOfBirth[200];
     int yearOfBirth;
-    char eyeColour[400];
-    char gender[400];
-    char hairColour[400];
+    char eyeColour[200];
+    char gender[200];
+    char hairColor[200];
     bool wizard;
-} Personagem;
+    
+}Personagem;
 
-typedef struct
-{
-    int dia;
-    int mes;
-    int ano;
-} Data;
-
-// faltando alternate names
-Personagem createPersonagem(const char *id, const char *name, const char *house, const char *ancestry, const char *species, const char *patronus, bool hogwartsStaff,
-                            const char *hogwartsStudent, const char *actorName, bool alive, int yearOfBirth, const char *eyeColour, const char *gender, const char *hairColour, bool wizard)
-{
+Personagem constr(char id[], char name[], char alternate_names[], char house[], char ancestry[], char species[], char patronus[], bool hogwartsStaff, bool hogwartsStudent, char actorName[], bool alive, char dateOfBirth[],
+int yearOfBirth, char eyeColour[], char gender[], char hairColor[], bool wizard){
     Personagem personagem;
+
     strcpy(personagem.id, id);
     strcpy(personagem.name, name);
-    // aternate names
+    strcpy(personagem.alternate_names.Lista, alternate_names);
     strcpy(personagem.house, house);
     strcpy(personagem.ancestry, ancestry);
-    strcpy(personagem.species, species);
     strcpy(personagem.patronus, patronus);
+    strcpy(personagem.species, species);
     personagem.hogwartsStaff = hogwartsStaff;
-    strcpy(personagem.hogwartsStudent, hogwartsStudent);
+    personagem.hogwartsStudent = hogwartsStudent;
     strcpy(personagem.actorName, actorName);
     personagem.alive = alive;
-    // data
+    strcpy(personagem.dateOfBirth,dateOfBirth);
     personagem.yearOfBirth = yearOfBirth;
     strcpy(personagem.eyeColour, eyeColour);
     strcpy(personagem.gender, gender);
-    strcpy(personagem.hairColour, hairColour);
+    strcpy(personagem.hairColor, hairColor);
     personagem.wizard = wizard;
+
     return personagem;
 }
 
-Data createData(int dia, int mes, int ano)
-{
-    Data data;
-    data.dia = dia;
-    data.mes = mes;
-    data.ano = ano;
-    return data;
+Personagem constrVazio(){
+    Personagem personagem;
+    strcpy(personagem.id, "");
+    strcpy(personagem.name, "");
+    strcpy(personagem.alternate_names.Lista, "");
+    strcpy(personagem.house, "");
+    strcpy(personagem.ancestry, "");
+    strcpy(personagem.patronus, "");
+    strcpy(personagem.species, "");
+    personagem.hogwartsStaff = 0;
+    personagem.hogwartsStudent = 0;
+    strcpy(personagem.actorName, "");
+    personagem.alive = 0;
+    strcpy(personagem.dateOfBirth,"");
+    personagem.yearOfBirth = 0;
+    strcpy(personagem.eyeColour, "");
+    strcpy(personagem.gender, "");
+    strcpy(personagem.hairColor, "");
+    personagem.wizard = 0;
+
+    return personagem;
 }
 
-// gets
-// faltando alternate names
-const char *getId(Personagem *personagem) { return personagem->id; }
-const char *getName(Personagem *personagem) { return personagem->name; }
-// alternate names
-const char *getHouse(Personagem *personagem) { return personagem->house; }
-const char *getAncestry(Personagem *personagem) { return personagem->ancestry; }
-const char *getSpecies(Personagem *personagem) { return personagem->species; }
-const char *getPatronus(Personagem *personagem) { return personagem->patronus; }
-bool getHogwartsStaff(Personagem *personagem) { return personagem->hogwartsStaff; }
-const char *getHogwartsStudent(Personagem *personagem) { return personagem->hogwartsStudent; }
-const char *getActorName(Personagem *personagem) { return personagem->actorName; }
-bool getAlive(Personagem *personagem) { return personagem->alive; }
-int getDia(Data *data) { return data->dia; }
-int getMes(Data *data) { return data->mes; }
-int getAno(Data *data) { return data->ano; }
-int getYearOfBirth(Personagem *personagem) { return personagem->yearOfBirth; }
-const char *getEyeColour(Personagem *personagem) { return personagem->eyeColour; }
-const char *getGenger(Personagem *personagem) { return personagem->gender; }
-const char *getHairColour(Personagem *personagem) { return personagem->hairColour; }
-bool getWizard(Personagem *personagem) { return personagem->wizard; }
 
-// sets
-// faltando alternate names
-void setId(Personagem *personagem, const char *novoId) { strcpy(personagem->id, novoId); }
-void setName(Personagem *personagem, const char *novoNome) { strcpy(personagem->name, novoNome); }
-// alternate names
-void setHouse(Personagem *personagem, const char *novoHouse) { strcpy(personagem->house, novoHouse); }
-void setAncestry(Personagem *personagem, const char *novoAncestry) { strcpy(personagem->ancestry, novoAncestry); }
-void setSpecies(Personagem *personagem, const char *novoSpecies) { strcpy(personagem->species, novoSpecies); }
-void setPatronus(Personagem *personagem, const char *novoPatronus) { strcpy(personagem->patronus, novoPatronus); }
-void setHogwartsStaff(Personagem *personagem, bool novoHogwartsStaff) { personagem->hogwartsStaff = novoHogwartsStaff; }
-void setHogwartsStudent(Personagem *personagem, const char *novoHogwartsStudent) { strcpy(personagem->hogwartsStudent, novoHogwartsStudent); }
-void setActorName(Personagem *personagem, const char *novoActorName) { strcpy(personagem->actorName, novoActorName); }
-void setAlive(Personagem *personagem, bool novoAlive) { personagem->alive = novoAlive; }
-void setDia(Data *data, int novoDia) { data->dia = novoDia; }
-void setMes(Data *data, int novoMes) { data->mes = novoMes; }
-void setAno(Data *data, int novoAno) { data->ano = novoAno; }
-void setYearOfBirth(Personagem *personagem, int novoYearOfBirth) { personagem->yearOfBirth = novoYearOfBirth; }
-void setEyeColour(Personagem *personagem, const char *novoEyeColour) { strcpy(personagem->eyeColour, novoEyeColour); }
-void setGender(Personagem *personagem, const char *novoGender) { strcpy(personagem->gender, novoGender); }
-void setHairColour(Personagem *personagem, const char *novoHairColour) { strcpy(personagem->hairColour, novoHairColour); }
-void setWizard(Personagem *personagem, bool novoWizard) { personagem->wizard = novoWizard; }
+//getters
+char* getId(Personagem *personagem){return personagem->id;}
+char* getName(Personagem *personagem){return personagem->name;}
+char* getAlternate_names(Personagem *personagem){return personagem->alternate_names.Lista;}
+char* getHouse(Personagem *personagem){return personagem->house;}
+char* getAncestry(Personagem *personagem){return personagem->ancestry;}
+char* getSpecies(Personagem *personagem){return personagem->species;}
+char* getPatronus(Personagem *personagem){return personagem->patronus;}
+char* getHogwartsStaff(Personagem *personagem){int value = personagem->hogwartsStaff;return value == 1? "true": "false";}
+char* getHogwartsStudent(Personagem *personagem){int value = personagem->hogwartsStudent;return value == 1? "true": "false";}
+char* getActorName(Personagem *personagem){return personagem->actorName;}
+char* getAlive(Personagem *personagem){int value = personagem->alive;return value == 1? "true": "false";}
+char* getDateOfBirth(Personagem *personagem){return personagem->dateOfBirth;}
+int getYearOfBith(Personagem *personagem){return personagem->yearOfBirth;}
+char* getEyeColour(Personagem *personagem){return personagem->eyeColour;}
+char* getGender(Personagem *personagem){return personagem->gender;}
+char* getHairColor(Personagem *personagem){return personagem->hairColor;}
+char* getWizard(Personagem *personagem){int value = personagem->wizard;return value == 1? "true": "false";}
 
-void ler(const char *x, Personagem* personagem, Data* data)
-{
-    // 0 = id 1 = name 2 = alternate_names 3 = house
-    // 4 = ancestry 5 = species 6 = patronus 7 = hogwartsStaff
-    // 8 = hogwartsStudent 9 = actorName 10 = alive 12 = dateOfBirth
-    // 13 = yearOfBirth 14 = eyeColor 15 = gender 16 = hairColour
-    // 17 = wizard
-    char string[400];
-    int j = 0;
+//setters
+void setId(char *id, Personagem *personagem){strcpy(personagem->id, id);}
+void setName(char *name, Personagem *personagem){strcpy(personagem->name, name);}
+void setAlternate_names(char *alternate_names, Personagem *personagem){strcpy(personagem->alternate_names.Lista, alternate_names);}
+void setHouse(char *house, Personagem *personagem){strcpy(personagem->house, house);}
+void setAncestry(char *species, Personagem *personagem){strcpy(personagem->species, species);}
+void setSpecies(char *species, Personagem *personagem){strcpy(personagem->species, species);}
+void setPatronus(char *patronus, Personagem *personagem){strcpy(personagem->patronus, patronus);}
+void setHogwartsStaff(char *hogwartsStaff, Personagem *personagem){
+    if(strcmp(hogwartsStaff, "true") == 0){
+        personagem->hogwartsStaff = 1;    
+    }else {
+        personagem->hogwartsStaff = 0;
+    }
+}
+void setHogwartsStudent(char * hogwartsStudent, Personagem *personagem){
+      if(strcmp(hogwartsStudent, "true") == 0){
+        personagem->hogwartsStaff = 1;    
+    }else {
+        personagem->hogwartsStaff = 0;
+    }
+}
+void setActorName(char *actorName, Personagem *personagem){strcpy(personagem->actorName, actorName);}
+void setAlive(char *alive, Personagem *personagem){
+    if(strcmp(alive, "true") == 0){
+        personagem->alive = 1;    
+    }else {
+        personagem->alive = 0;
+    }
+}
+void setDateOfBirth(char *dateOfBirth, Personagem *personagem){strcpy(personagem->dateOfBirth, dateOfBirth);}
+void setYearOfBith(int yearOfBirth, Personagem *personagem){personagem->yearOfBirth = yearOfBirth;}
+void setEyeColour(char *eyeColour, Personagem *personagem){strcpy(personagem->eyeColour, eyeColour);}
+void setGender(char *gender, Personagem *personagem){strcpy(personagem->gender, gender);}
+void setHairColor(char *hairColor, Personagem *personagem){strcpy(personagem->hairColor, hairColor);}
+void setWizard(char *wizard, Personagem *personagem){
+    if(strcmp(wizard, "true") == 0){
+        personagem->wizard = 1;    
+    }else {
+        personagem->wizard = 0;
+    }
+}
 
-    for (int i = 0; i < strlen(x); i++)
-    {
-        if (x[i] == '[' || x[i] == ']')
-        {
-            i++;
+//ler
+char **ler(char line[]){
+    int tam_line = strlen(line);
+    int start = 0;
+    int count = 0;
+    char **elementos = malloc(18 * sizeof(char*));
+
+    for (int i = 0; i < 18; i++) {
+        elementos[i] = malloc(500);
+    }
+
+
+    for(int i = 0; i < tam_line; i++){
+        if(line[i] == ';' && line[i-1] == ';'){
+            strcpy(elementos[count], "");
+            start = i + 1;
+            count++;
+        } else if (line[i] == ';'){
+            strncpy(elementos[count], line + start, i-start);
+            elementos[count][i-start] = '\0';
+            start = i + 1;
+            count++;
         }
-        else
-        {
-            string[j] = x[i];
-            j++;
-        }
     }
-    string[j] = '\0';
 
-    const char partes[2] = ";";
-    char *token;
-    
-    
-    // 0
-    token = strtok(string, partes);
-    setId(personagem, token);
-    // 1
-    token = strtok(NULL, partes);
-    setName(personagem, token);
-    // 2
-    // alternates
-    token = strtok(NULL, partes);
-    // 3
-    token = strtok(NULL, partes);
-    setHouse(personagem, token);
-    // 4
-    token = strtok(NULL, partes);
-    setAncestry(personagem, token);
-    // 5
-    token = strtok(NULL, partes);
-    setSpecies(personagem, token);
-    // 6
-    token = strtok(NULL, partes);
-    setPatronus(personagem, token);
-    // 7
-    token = strtok(NULL, partes);
-    if (strcmp(token, "FALSO") == 0)
-    {
-        setHogwartsStaff(personagem, false);
-    }
-    else
-    {
-        setHogwartsStaff(personagem, true);
-    }
-    // 8
-    token = strtok(NULL, partes);
-    if (strcmp(token, "FALSO") == 0)
-    {
-        setHogwartsStudent(personagem, "false");
-    }
-    else
-    {
-        setHogwartsStudent(personagem, "true");
-    }
-    // 9
-    token = strtok(NULL, partes);
-    setActorName(personagem, token);
-    // 10
-    if (strcmp(token, "FALSO") == 0)
-    {
-        setAlive(personagem, false);
-    }
-    else
-    {
-        setAlive(personagem, true);
-    }
-    // 11
-    token = strtok(NULL, partes);
-    // 12
-    const char dataTmp[2] = "-";
-    char *token2;
-    token2 = strtok(token, dataTmp);
-    setDia(data, atoi(token2));
-    token2 = strtok(NULL, dataTmp);
-    setMes(data, atoi(token2));
-    token2 = strtok(NULL, dataTmp);
-    setAno(data, atoi(token2));
-    // 13
-    token = strtok(NULL, partes);
-    setYearOfBirth(personagem, atoi(token));
-    // 14
-    token = strtok(NULL, partes);
-    setEyeColour(personagem, token);
-    // 15
-    token = strtok(NULL, partes);
-    setGender(personagem, token);
-    // 16
-    token = strtok(NULL, partes);
-    setHairColour(personagem, token);
-    // 17
-    token = strtok(NULL, partes);
-    if (strcmp(token, "FALSO") == 0)
-    {
-        setWizard(personagem, false);
-    }
-    else
-    {
-        setWizard(personagem, true);
-    }
-    
+    strncpy(elementos[17], line + start, (tam_line-start) - 1);
+
+    return elementos;
 }
 
-void imprimir(Personagem* personagem, Data* data)
-{
-    printf("[%s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %d-%d-%d ## %d ## %s ## %s ## %s ## %s]",
-           personagem->id, personagem->name, personagem->house, personagem->ancestry, personagem->species, personagem->patronus, personagem->hogwartsStaff ? "true" : "false",
-           personagem->hogwartsStudent, personagem->actorName, personagem->alive ? "true" : "false", data->dia, data->mes, data->ano, personagem->yearOfBirth, personagem->eyeColour,
-           personagem->gender, personagem->hairColour, personagem->wizard ? "true" : "false");
-}
-void destroyPersonagem(Personagem *personagem) {
-    free(personagem);
-}
-void destroyData(Data *data) {
-    free(data);
+//imprimir
+void imprimir(Personagem *personagem){
+    printf("[%s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %s ## %d ## %s ## %s ## %s ## %s]\n",
+     personagem->id, personagem->name, personagem->alternate_names.Lista, personagem->house, personagem->ancestry, personagem->species, personagem->patronus,
+     personagem->hogwartsStaff == 1? "true": "false", personagem->hogwartsStudent == 1? "true": "false", personagem->actorName, personagem->alive == 1? "true": "false", personagem->dateOfBirth, 
+     personagem->yearOfBirth, personagem->eyeColour, personagem->gender, personagem->hairColor, personagem->wizard == 1? "true": "false") ;
 }
 
-int main()
-{
-    char linha[500];
-    FILE *arq = fopen("characters.csv", "r");
-    bool fim = false;
-    Personagem personagens[1000];
-    Data datas[1000];
-    int numPersonagens = 0;
-
-    while (fscanf(arq, "%499[^\\n]%*c", linha) == 1)
-    {
-        ler(linha, &personagens[numPersonagens], &datas[numPersonagens]);
-        numPersonagens++;
-    }
-    fclose(arq);
-
-    char id[50];
-    while (fim == false)
-    {
-        fgets(id, 50, stdin);
-        id[strcspn(id, "\n")] = '\0';
-        if (id[0] == 'F' && id[1] == 'I' && id[2] == 'M')
-        {
-            fim = true;
-        }
-        else
-        {
-            for (int i = 0; i < numPersonagens; i++)
-            {
-                if (strcmp(personagens[i].id, id) == 0)
-                {
-                    imprimir(&personagens[i], &datas[i]);
-                    break;
+void preencherVetor(Personagem personagens[]){
+    FILE *arq;
+    char line[1200];
+    if((arq = fopen("/tmp/characters.csv", "r")) != NULL){
+        
+        int i = 0;
+        fgets(line,500,arq);
+        while( fgets(line,1200,arq) != NULL){
+            char **partes = ler(line);            
+            
+            for(int i = 0; partes[2][i] != '\0'; i++){
+                if(partes[2][i] == '['){
+                    partes[2][i] = '{';
+                }else if(partes[2][i] == ']'){
+                   partes[2][i] = '}';
+                }else if(partes[2][i] == '\''){
+                    partes[2][i] = ' ';
                 }
             }
+
+            personagens[i] = constr(partes[0],partes[1],partes[2],partes[3],partes[4],
+            partes[5], partes[6], strcmp(partes[7], "VERDADEIRO") == 0? true: false, strcmp(partes[8], "VERDADEIRO") == 0? true: false, partes[9], partes[10],
+            partes[12],atoi(partes[13]), partes[14], partes[15], partes[16], strcmp(partes[17], "VERDADEIRO") == 0? true: false);
+            
+            i++;
+            free(partes);
         }
+        fclose(arq);
+    }else {
+        printf("Erro ao abrir o arquivo");
     }
     
+}
+
+
+int main(){
+    char id[200];
+    int result;
+    Personagem personagens[405];
+    preencherVetor(personagens);
+
+    scanf("%s", id);
+    
+    while(strcmp(id, "FIM") != 0){
+        for(int i = 0; i < 405; i++){            
+            result = strcmp(personagens[i].id,id);            
+            if( result == 0){
+                imprimir(&personagens[i]);
+                i = 500;
+            }
+        }
+        scanf("%s", id);
+    }
     return 0;
 }
