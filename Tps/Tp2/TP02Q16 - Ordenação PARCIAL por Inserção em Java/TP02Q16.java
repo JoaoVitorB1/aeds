@@ -1,10 +1,8 @@
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
 
-class TP02Q07 {
+class TP02Q16 {
     static class Personagem {
         private String id;
         private String name;
@@ -425,7 +423,7 @@ class TP02Q07 {
         int mov = 0, comp = 0;
 
         // organiza os personagens a partir do nome
-        for (int i = 0; i < personagens1.size() - 1; i++) {
+        for (int i = 0; i < 10; i++) {
             int menor = i;
             for (int j = i + 1; j < personagens1.size(); j++) {
                 //verifica se é menor
@@ -476,11 +474,11 @@ class TP02Q07 {
         }
 
         // printa os personagens organizados
-        for (Personagem personagem : personagens1) {
-            personagem.imprimir();
+        for (int i=0;i<10;i++) {
+            personagens1.get(i).imprimir();
         }
         Arq.openWrite("matricula_selecao.txt");
-        Arq.print("694520\t" + comp + "\t" + mov + "\t" + (System.currentTimeMillis() - inicio) / 1000);
+        Arq.print("694520\t" + (System.currentTimeMillis() - inicio) / 1000+  "\t"+comp );
         Arq.close();
     }
 }

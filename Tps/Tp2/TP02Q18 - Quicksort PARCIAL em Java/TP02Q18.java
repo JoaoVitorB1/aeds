@@ -1,10 +1,15 @@
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
 
-class TP02Q07 {
+class TP02Q18 {
+    static double inicio = System.currentTimeMillis(); 
+    static int comp=0;
+    static void criaArqLog(){
+        Arq.openWrite("matricula_quicksort.txt");
+        Arq.print("694520\t"+(System.currentTimeMillis()-inicio/1000)+"\t"+comp);
+        Arq.close();
+    }
     static class Personagem {
         private String id;
         private String name;
@@ -386,15 +391,38 @@ class TP02Q07 {
 
     }
 
+    static void quickSort(ArrayList<Personagem> personagens1, int left, int right, int quant) {
+        int i = left;
+        int j = right;
+        int piv = (left + right) / 2;
+
+        while (j >= i) {
+            while ((personagens1.get(i).getHouse().compareTo(personagens1.get(piv).getHouse()) < 0)||((personagens1.get(i).getHouse().compareTo(personagens1.get(piv).getHouse()) == 0)&&(personagens1.get(i).getName().compareTo(personagens1.get(piv).getName())<0)))i++;
+                
+            while ((personagens1.get(piv).getHouse().compareTo(personagens1.get(j).getHouse()) < 0)||((personagens1.get(piv).getHouse().compareTo(personagens1.get(j).getHouse()) == 0)&&(personagens1.get(piv).getName().compareTo(personagens1.get(j).getName())<0)))j--;
+            comp++;
+            if (j >= i) {
+                Personagem temp = personagens1.get(i);
+                personagens1.set(i, personagens1.get(j));
+                personagens1.set(j, temp);
+                i++;
+                j--;
+            }
+            comp++;
+            if (left < j)
+                quickSort(personagens1, left, j, quant);
+            comp++;
+            if (quant > i)
+                quickSort(personagens1, i, right, quant);
+        }
+    }
+
     public static void main(String[] args) {
-        double inicio = System.currentTimeMillis();
         Scanner scanner = new Scanner(System.in);
         String x;
         boolean fim = false;
         ArrayList<Personagem> personagens = new ArrayList<>();
         ArrayList<Personagem> personagens1 = new ArrayList<>();
-
-        // le todos os personagens
         Arq.openRead("/tmp/characters.csv");
         x = Arq.readLine();
         while (Arq.hasNext()) {
@@ -406,7 +434,6 @@ class TP02Q07 {
         }
         Arq.close();
 
-        // le os ids que precisam ser organizados
         while (fim == false) {
             x = scanner.nextLine();
             if (x.length() == 3 && x.charAt(0) == 'F' && x.charAt(1) == 'I' && x.charAt(2) == 'M') {
@@ -421,66 +448,12 @@ class TP02Q07 {
             }
         }
         scanner.close();
-
-        int mov = 0, comp = 0;
-
-        // organiza os personagens a partir do nome
-        for (int i = 0; i < personagens1.size() - 1; i++) {
-            int menor = i;
-            for (int j = i + 1; j < personagens1.size(); j++) {
-                //verifica se é menor
-                comp++;
-                int z=personagens1.get(menor).getDateOfBirth().compareTo(personagens1.get(j).getDateOfBirth());
-                if (z>0) {
-                    menor = j;
-                } else {
-                    //se for falso verifica se a data é igual
-                    comp++;
-                    if (z==0) {
-                        comp++;
-                        //se for verdadeiro organiza por ordem alfabetica nome
-                        if (personagens1.get(menor).getName().charAt(0) > personagens1.get(j).getName().charAt(0)) {
-                            menor = j;
-                        } else {
-                            comp += 2;
-                            if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0)
-                                    &&
-                                    personagens1.get(menor).getName().charAt(1) > personagens1.get(j).getName()
-                                            .charAt(1)) {
-                                menor = j;
-                            } else {
-                                comp += 3;
-                                if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0) &&
-                                    personagens1.get(menor).getName().charAt(1) == personagens1.get(j).getName().charAt(1) &&
-                                    personagens1.get(menor).getName().charAt(2) > personagens1.get(j).getName().charAt(2)) {
-                                    menor = j;
-                                } else {
-                                    comp += 4;
-                                    if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0)&&
-                                        personagens1.get(menor).getName().charAt(1) == personagens1.get(j).getName().charAt(1)&&
-                                        personagens1.get(menor).getName().charAt(2) == personagens1.get(j).getName().charAt(2)&&
-                                        personagens1.get(menor).getName().charAt(3) > personagens1.get(j).getName().charAt(3)) {
-                                        menor = j;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            Personagem temp = personagens1.get(i);
-            personagens1.set(i, personagens1.get(menor));
-            personagens1.set(menor, temp);
-            mov += 3;
-        }
-
+        
+        quickSort(personagens1, 0, personagens1.size() - 1,10);
         // printa os personagens organizados
-        for (Personagem personagem : personagens1) {
-            personagem.imprimir();
+        for (int i = 0; i < 10; i++) {
+            personagens1.get(i).imprimir();
         }
-        Arq.openWrite("matricula_selecao.txt");
-        Arq.print("694520\t" + comp + "\t" + mov + "\t" + (System.currentTimeMillis() - inicio) / 1000);
-        Arq.close();
+        criaArqLog();
     }
 }

@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-class TP02Q07 {
+class TP02Q15 {
     static class Personagem {
         private String id;
         private String name;
@@ -388,13 +388,13 @@ class TP02Q07 {
 
     public static void main(String[] args) {
         double inicio = System.currentTimeMillis();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);        
         String x;
         boolean fim = false;
         ArrayList<Personagem> personagens = new ArrayList<>();
         ArrayList<Personagem> personagens1 = new ArrayList<>();
 
-        // le todos os personagens
+        //le todos os personagens
         Arq.openRead("/tmp/characters.csv");
         x = Arq.readLine();
         while (Arq.hasNext()) {
@@ -406,7 +406,7 @@ class TP02Q07 {
         }
         Arq.close();
 
-        // le os ids que precisam ser organizados
+        //le os ids que precisam ser organizados
         while (fim == false) {
             x = scanner.nextLine();
             if (x.length() == 3 && x.charAt(0) == 'F' && x.charAt(1) == 'I' && x.charAt(2) == 'M') {
@@ -424,63 +424,29 @@ class TP02Q07 {
 
         int mov = 0, comp = 0;
 
-        // organiza os personagens a partir do nome
-        for (int i = 0; i < personagens1.size() - 1; i++) {
+        //organiza os personagens a partir do nome
+        
+        for (int i = 0; i < 10; i++) {
             int menor = i;
             for (int j = i + 1; j < personagens1.size(); j++) {
-                //verifica se é menor
                 comp++;
-                int z=personagens1.get(menor).getDateOfBirth().compareTo(personagens1.get(j).getDateOfBirth());
-                if (z>0) {
+                int comparacao=personagens1.get(menor).getName().compareTo(personagens1.get(j).getName());
+                if (comparacao>0) {
                     menor = j;
-                } else {
-                    //se for falso verifica se a data é igual
-                    comp++;
-                    if (z==0) {
-                        comp++;
-                        //se for verdadeiro organiza por ordem alfabetica nome
-                        if (personagens1.get(menor).getName().charAt(0) > personagens1.get(j).getName().charAt(0)) {
-                            menor = j;
-                        } else {
-                            comp += 2;
-                            if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0)
-                                    &&
-                                    personagens1.get(menor).getName().charAt(1) > personagens1.get(j).getName()
-                                            .charAt(1)) {
-                                menor = j;
-                            } else {
-                                comp += 3;
-                                if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0) &&
-                                    personagens1.get(menor).getName().charAt(1) == personagens1.get(j).getName().charAt(1) &&
-                                    personagens1.get(menor).getName().charAt(2) > personagens1.get(j).getName().charAt(2)) {
-                                    menor = j;
-                                } else {
-                                    comp += 4;
-                                    if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0)&&
-                                        personagens1.get(menor).getName().charAt(1) == personagens1.get(j).getName().charAt(1)&&
-                                        personagens1.get(menor).getName().charAt(2) == personagens1.get(j).getName().charAt(2)&&
-                                        personagens1.get(menor).getName().charAt(3) > personagens1.get(j).getName().charAt(3)) {
-                                        menor = j;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                } 
             }
-
             Personagem temp = personagens1.get(i);
             personagens1.set(i, personagens1.get(menor));
-            personagens1.set(menor, temp);
+            personagens1.set(menor, temp); 
             mov += 3;
         }
 
-        // printa os personagens organizados
-        for (Personagem personagem : personagens1) {
-            personagem.imprimir();
+        //printa os personagens organizados
+        for (int i=0;i<10;i++) {
+            personagens1.get(i).imprimir();
         }
         Arq.openWrite("matricula_selecao.txt");
-        Arq.print("694520\t" + comp + "\t" + mov + "\t" + (System.currentTimeMillis() - inicio) / 1000);
+        Arq.print("694520\t"+"\t"+"\t"+(System.currentTimeMillis()-inicio)/1000+comp);
         Arq.close();
     }
 }

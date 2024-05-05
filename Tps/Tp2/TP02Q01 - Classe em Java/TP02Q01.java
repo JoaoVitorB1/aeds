@@ -2,6 +2,7 @@ import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 class TP02Q01 {
     static class Personagem {
@@ -386,6 +387,7 @@ class TP02Q01 {
     }
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         String x;
         boolean fim = false;
         ArrayList<Personagem> personagens = new ArrayList<>();
@@ -402,8 +404,8 @@ class TP02Q01 {
         Arq.close();
 
         while (fim == false) {
-            x = MyIO.readLine();
-            if (x.length() == 3) {
+            x = scanner.nextLine();
+            if (x.length() == 3&&x.charAt(0)=='F'&&x.charAt(1)=='I'&&x.charAt(2)=='M') {
                 fim = true;
             } else {
                 for (Personagem personagem : personagens) {
@@ -414,6 +416,7 @@ class TP02Q01 {
                 }
             }
         }
+        scanner.close();
 
     }
 }

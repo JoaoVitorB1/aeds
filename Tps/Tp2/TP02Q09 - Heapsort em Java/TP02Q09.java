@@ -1,10 +1,15 @@
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
 
-class TP02Q07 {
+class TP02Q09 {
+    static double inicio = System.currentTimeMillis(); 
+    static int comp=0;
+    static void criaArqLog(){
+        Arq.openWrite("matricula_heapsort.txt");
+        Arq.print("694520\t"+(System.currentTimeMillis()-inicio/1000)+"\t"+comp);
+        Arq.close();
+    }
     static class Personagem {
         private String id;
         private String name;
@@ -386,15 +391,93 @@ class TP02Q07 {
 
     }
 
+    static boolean hasFilho(int i, int tam, ArrayList<Personagem> personagens1) {
+        if (2 * i + 1 <= tam) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    static void construir(ArrayList<Personagem> personagens1, int tam) {
+        for (int i = tam; i > 0; i--) {
+            int pai = (i - 1) / 2;
+            comp++;
+            int comparacao = personagens1.get(i - 1).getHairColour().compareToIgnoreCase(personagens1.get(pai).getHairColour());
+            if (comparacao > 0 || (comparacao == 0 && personagens1.get(i - 1).getName().compareToIgnoreCase(personagens1.get(pai).getName()) > 0)) {
+                Personagem temp = personagens1.get(i - 1);
+                personagens1.set(i - 1, personagens1.get(pai));
+                personagens1.set(pai, temp);
+            }
+        }
+    }
+    static int getMaiorFilho(int i, int tam, ArrayList<Personagem> personagens1) {
+        int maior;
+        comp++;
+        int comparacao = personagens1.get(2 * i + 1).getHairColour().compareToIgnoreCase(personagens1.get(2 * i + 2).getHairColour());
+        if (comparacao > 0) {
+            maior = 2 * i + 1;
+            return maior;
+        } else if (comparacao < 0) {
+            maior = 2 * i + 2;
+            return maior;
+        } else {
+            comp++;
+            comparacao = personagens1.get(2 * i + 1).getName().compareToIgnoreCase(personagens1.get(2 * i + 2).getName());
+            if (comparacao > 0) {
+                maior = 2 * i + 1;
+                return maior;
+            } else {
+                maior = 2 * i + 2;
+                return maior;
+            }
+        }
+    }
+    
+    static void reconstruir(ArrayList<Personagem> personagens1, int tam) {
+        int i = 0;
+        while (hasFilho(i, tam, personagens1)) {
+            int filho = getMaiorFilho(i, tam, personagens1);
+            comp++;
+            int comparacao = personagens1.get(i).getHairColour().compareToIgnoreCase(personagens1.get(filho).getHairColour());
+            if (comparacao < 0 || (comparacao == 0 && personagens1.get(i).getName().compareToIgnoreCase(personagens1.get(filho).getName()) < 0)) {
+                Personagem temp = personagens1.get(i);
+                personagens1.set(i, personagens1.get(filho));
+                personagens1.set(filho, temp);
+                i = filho;
+            } else {
+                break;
+            }
+        }
+    }
+
+    static void heapsort(ArrayList<Personagem> personagens1) {
+        
+        // Construção do heap
+        for (int tam = 1; tam < personagens1.size(); tam++) {
+            // Segue o principio da inserção
+            construir(personagens1, tam);
+        }
+
+        // Ordenação
+        int tam = personagens1.size()-1;
+        while (tam >0) {
+            Personagem temp = personagens1.get(0);
+            personagens1.set(0, personagens1.get(tam));
+            personagens1.set(tam, temp);
+            tam--;
+            reconstruir(personagens1, tam);
+
+        }
+    }
+
     public static void main(String[] args) {
-        double inicio = System.currentTimeMillis();
         Scanner scanner = new Scanner(System.in);
         String x;
         boolean fim = false;
         ArrayList<Personagem> personagens = new ArrayList<>();
         ArrayList<Personagem> personagens1 = new ArrayList<>();
 
-        // le todos os personagens
         Arq.openRead("/tmp/characters.csv");
         x = Arq.readLine();
         while (Arq.hasNext()) {
@@ -406,7 +489,6 @@ class TP02Q07 {
         }
         Arq.close();
 
-        // le os ids que precisam ser organizados
         while (fim == false) {
             x = scanner.nextLine();
             if (x.length() == 3 && x.charAt(0) == 'F' && x.charAt(1) == 'I' && x.charAt(2) == 'M') {
@@ -420,67 +502,16 @@ class TP02Q07 {
                 }
             }
         }
+
         scanner.close();
+        int n = personagens1.size();
+        heapsort(personagens1);
 
-        int mov = 0, comp = 0;
-
-        // organiza os personagens a partir do nome
-        for (int i = 0; i < personagens1.size() - 1; i++) {
-            int menor = i;
-            for (int j = i + 1; j < personagens1.size(); j++) {
-                //verifica se é menor
-                comp++;
-                int z=personagens1.get(menor).getDateOfBirth().compareTo(personagens1.get(j).getDateOfBirth());
-                if (z>0) {
-                    menor = j;
-                } else {
-                    //se for falso verifica se a data é igual
-                    comp++;
-                    if (z==0) {
-                        comp++;
-                        //se for verdadeiro organiza por ordem alfabetica nome
-                        if (personagens1.get(menor).getName().charAt(0) > personagens1.get(j).getName().charAt(0)) {
-                            menor = j;
-                        } else {
-                            comp += 2;
-                            if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0)
-                                    &&
-                                    personagens1.get(menor).getName().charAt(1) > personagens1.get(j).getName()
-                                            .charAt(1)) {
-                                menor = j;
-                            } else {
-                                comp += 3;
-                                if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0) &&
-                                    personagens1.get(menor).getName().charAt(1) == personagens1.get(j).getName().charAt(1) &&
-                                    personagens1.get(menor).getName().charAt(2) > personagens1.get(j).getName().charAt(2)) {
-                                    menor = j;
-                                } else {
-                                    comp += 4;
-                                    if (personagens1.get(menor).getName().charAt(0) == personagens1.get(j).getName().charAt(0)&&
-                                        personagens1.get(menor).getName().charAt(1) == personagens1.get(j).getName().charAt(1)&&
-                                        personagens1.get(menor).getName().charAt(2) == personagens1.get(j).getName().charAt(2)&&
-                                        personagens1.get(menor).getName().charAt(3) > personagens1.get(j).getName().charAt(3)) {
-                                        menor = j;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            Personagem temp = personagens1.get(i);
-            personagens1.set(i, personagens1.get(menor));
-            personagens1.set(menor, temp);
-            mov += 3;
+        // imprimir
+        for (int i = 0; i < personagens1.size(); i++) {
+            personagens1.get(i).imprimir();
         }
+        criaArqLog();
 
-        // printa os personagens organizados
-        for (Personagem personagem : personagens1) {
-            personagem.imprimir();
-        }
-        Arq.openWrite("matricula_selecao.txt");
-        Arq.print("694520\t" + comp + "\t" + mov + "\t" + (System.currentTimeMillis() - inicio) / 1000);
-        Arq.close();
     }
 }
