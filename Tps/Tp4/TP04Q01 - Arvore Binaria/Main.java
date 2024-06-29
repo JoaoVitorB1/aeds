@@ -168,7 +168,7 @@ class Main {
     public static ArrayList<Personagem> readArq() {
         String x;
         ArrayList<Personagem> personagens = new ArrayList<>();
-        Arq.openRead("/tmp/characters.csv");
+        Arq.openRead("characters.csv");
         x = Arq.readLine();
         while (Arq.hasNext()) {
             x = Arq.readLine();

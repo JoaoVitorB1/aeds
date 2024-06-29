@@ -1,11 +1,4 @@
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -15,160 +8,152 @@ class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Questao6();
+        Questao7();
         scanner.close();
     }
 
     // ---------------------------------------------Questoes---------------------------------------------
-    static void Questao6() {
+    static void Questao7() {
         String x;
         boolean fim = false;
         ArrayList<Personagem> personagens = new ArrayList<>();
-        try {
-            personagens = readArq();
-            Hash tabelaHash = new Hash(21);
-            while (fim == false) {
-                x = scanner.nextLine();
-                if (x.equals("FIM")) {
-                    fim = true;
-                } else {
-                    for (Personagem personagem : personagens) {
-                        if (personagem.getId().equals(x)) {
-                            tabelaHash.inserir(personagem);
-                        }
+        personagens = readArq();
+        HashIndiretoLista tabelaHash = new HashIndiretoLista(21);
+        while (fim == false) {
+            x = scanner.nextLine();
+            if (x.equals("FIM")) {
+                fim = true;
+            } else {
+                for (Personagem personagem : personagens) {
+                    if (personagem.getId().equals(x)) {
+                        tabelaHash.inserirInicio(personagem);
                     }
                 }
             }
-            fim = false;
-            while (fim == false) {
-                x = scanner.nextLine();
-                if (x.equals("FIM")) {
-                    fim = true;
-                } else {
-                    System.out.print(x);
-                    System.out.println(tabelaHash.pesquisar(x) ? " SIM" : " NAO");
-                }
-            }
-            try{
-                criaArqLog();
-            }catch(Exception e){
-                System.err.println(e.getMessage());
-            }            
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
         }
-
+        fim = false;
+        while (fim == false) {
+            x = scanner.nextLine();
+            if (x.equals("FIM")) {
+                fim = true;
+            } else {
+                System.out.print(x);
+                System.out.println(tabelaHash.pesquisar(x) ? " SIM" : " NAO");
+            }
+        }
+        criaArqLog();
     }
 
-    static public class Hash {
-        Personagem[] tabela;
-        int m;
+    static public class HashIndiretoLista {
+        Lista tabela[];
+        int tamanho;        
 
-        public Hash() {
-            this(13);
+        public HashIndiretoLista() {
+            this(21);
         }
 
-        public Hash(int m) {
-            this.m = m;
-            this.tabela = new Personagem[this.m];
-            for (int i = 0; i < m; i++) {
-                tabela[i] = null;
+        public HashIndiretoLista(int tamanho) {
+            this.tamanho = tamanho;
+            tabela = new Lista[tamanho];
+            for (int i = 0; i < tamanho; i++) {
+                tabela[i] = new Lista();
             }
         }
 
-        public int h(int elemento) {
-            return elemento % m;
+        public int h(String elemento) {
+            int soma=0;
+            for(int i=0;i<elemento.length();i++){
+                soma+=elemento.charAt(i);
+            }
+            return soma % tamanho;
         }
 
-        public int reh(int elemento) {
-            return ++elemento % m;
+        boolean pesquisar(String elemento) {
+            int pos = h(elemento);            
+            return tabela[pos].pesquisar(elemento,pos);
         }
 
-        public boolean inserir(Personagem elemento) {
-            boolean resp = false;
-            if (elemento != null) {
-                int soma = 0;
-                for (int i = 0; i < elemento.getName().length(); i++) {
-                    soma += elemento.getName().charAt(i);
-                }
-                int pos = h(soma);
+        public void inserirInicio(Personagem elemento) {
+            int pos = h(elemento.getName());
+            tabela[pos].inserirInicio(elemento);
+        }
+        
+    }
+
+    static class Celula {
+        public Personagem elemento; // Elemento inserido na celula.
+        public Celula prox; // Aponta a celula prox.
+
+        Celula(Personagem elemento) {
+            this.elemento = elemento;
+            this.prox = null;
+        }
+
+        Celula(Personagem elemento, Celula prox) {
+            this.elemento = elemento;
+            this.prox = prox;
+        }
+    }
+
+    static public class Lista {
+        private Celula primeiro; // Primeira celula: SEM elemento valido.
+        private Celula ultimo; // Ultima celula: COM elemento valido.
+
+        public Lista() {
+            primeiro = new Celula(null);
+            ultimo = primeiro;
+        }
+
+        public boolean pesquisar(String x,int pos) {
+            boolean retorno = false;
+            for (Celula i = primeiro.prox; i != null; i = i.prox) {
                 comp++;
-                if (tabela[pos] == null) {
-                    tabela[pos] = elemento;
-                    resp = true;
-                } else {
-                    pos = reh(soma);
-                    comp++;
-                    if (tabela[pos] == null) {
-                        tabela[pos] = elemento;
-                        resp = true;
-                    }
+                if (i.elemento.getName().equals(x)) {
+                    retorno = true;
+                    i = ultimo;
                 }
             }
-            return resp;
+            if (retorno == true){
+                System.out.print(" (pos: "+pos+")");
+            }
+            return retorno;
         }
 
-        public boolean pesquisar(String elemento) {
-            boolean resp = false;
-            int soma = 0;
-            for (int i = 0; i < elemento.length(); i++) {
-                soma += elemento.charAt(i);
-            }
-            int pos = h(soma);
+        public void inserirInicio(Personagem elemento) {
+            Celula tmp = new Celula(elemento);
+            tmp.prox = primeiro.prox;
+            primeiro.prox = tmp;
             comp++;
-            if (tabela[pos] == null) {
-                return false;
-            } else {
-                comp++;
-                if (tabela[pos].getName().equals(elemento)) {
-                    System.out.print(" (pos: " + pos + ")");
-                    resp = true;
-                } else {
-                    comp++;
-                    pos = reh(soma);
-                    if (tabela[pos].getName().equals(elemento)) {
-                        System.out.print(" (pos: " + pos + ")");
-                        resp = true;
-                    }
-                }
+            if (primeiro == ultimo) {
+                ultimo = tmp;
             }
-            return resp;
+            tmp = null;
         }
+
     }
 
     // ---------------------------------------------CriaArqLog---------------------------------------------
-    static void criaArqLog() throws IOException{
-        try{
-            FileWriter writer = new FileWriter("matricula_hashRehash.txt");
-            writer.write("694520\t" + (System.currentTimeMillis() - (inicio / 1000)) + "\t" + comp);
-            writer.close();
-        }catch(IOException e){
-            throw new IOException("Erro para criar log");
-        }
+    static void criaArqLog() {
+        Arq.openWrite("matricula_hashIndireta.txt");
+        Arq.print("694520\t" + (System.currentTimeMillis() - (inicio / 1000)) + "\t" + comp);
+        Arq.close();
     }
 
     // ---------------------------------------------readArq---------------------------------------------
-    public static ArrayList<Personagem> readArq() throws FileNotFoundException {
+    public static ArrayList<Personagem> readArq() {
         String x;
         ArrayList<Personagem> personagens = new ArrayList<>();
-        Scanner scanner1 = null;
-        try {
-            scanner1 = new Scanner(new FileReader("/tmp/characters.csv"));
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Erro ao tentar abrir o arquivo");
-        }
-        x = scanner1.nextLine();
-        while (scanner1.hasNext()) {
-            x = scanner1.nextLine();
+        Arq.openRead("characters.csv");
+        x = Arq.readLine();
+        while (Arq.hasNext()) {
+            x = Arq.readLine();
             Personagem personagem = new Personagem();
             x = x.replaceAll(";;", "; ;").replaceAll("\\[", "{").replaceAll("]", "}");
             personagem.ler(x);
             personagens.add(personagem);
-
         }
-        scanner1.close();
+        Arq.close();
         return personagens;
-
     }
 
     // ---------------------------------------------Classe_Personagem---------------------------------------------

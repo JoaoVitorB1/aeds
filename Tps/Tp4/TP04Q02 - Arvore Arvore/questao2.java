@@ -1,174 +1,274 @@
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-class Main {
+public class questao2 {
     static double inicio = System.currentTimeMillis();
     static int comp = 0;
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        Questao6();
+        Questao2();
         scanner.close();
     }
 
     // ---------------------------------------------Questoes---------------------------------------------
-    static void Questao6() {
+    // Questao 2
+    static void Questao2() {
         String x;
+
         boolean fim = false;
-        ArrayList<Personagem> personagens = new ArrayList<>();
-        try {
-            personagens = readArq();
-            Hash tabelaHash = new Hash(21);
-            while (fim == false) {
-                x = scanner.nextLine();
-                if (x.equals("FIM")) {
-                    fim = true;
-                } else {
-                    for (Personagem personagem : personagens) {
-                        if (personagem.getId().equals(x)) {
-                            tabelaHash.inserir(personagem);
+        ArrayList<Personagem> personagens = readArq();
+
+        ArvoreArvore arvorearvore = new ArvoreArvore();
+
+        // Inserindo os numeros 7, 3, 11, 1, 5, 9, 13, 0, 2, 4, 6, 8, 10, 12, 14
+        int[] nums = { 7, 3, 11, 1, 5, 9, 13, 0, 2, 4, 6, 8, 10, 12, 14 };
+        for (int i = 0; i < nums.length; i++) {
+            try {
+                arvorearvore.inserir(nums[i]);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
+
+        // Adicionando personagens na arvore
+        x = scanner.nextLine();
+        while (fim == false) {
+            if (x.equals("FIM")) {
+                fim = true;
+            } else {
+                for (Personagem personagem : personagens) {
+                    if (personagem.getId().compareTo(x) == 0) {
+                        try {
+                            arvorearvore.inserir(personagem);
+                        } catch (Exception e) {
+                            System.err.println(e.getMessage());
                         }
                     }
                 }
-            }
-            fim = false;
-            while (fim == false) {
                 x = scanner.nextLine();
-                if (x.equals("FIM")) {
-                    fim = true;
-                } else {
-                    System.out.print(x);
-                    System.out.println(tabelaHash.pesquisar(x) ? " SIM" : " NAO");
-                }
             }
-            try{
-                criaArqLog();
-            }catch(Exception e){
-                System.err.println(e.getMessage());
-            }            
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
         }
+        fim = false;
 
+        // Procurar os personagens
+        x = scanner.nextLine();
+        while (fim == false) {
+            if (x.equals("FIM")) {
+                fim = true;
+            } else {
+                System.out.print(x);
+                boolean resp = arvorearvore.pesquisar(x);
+                System.out.print(resp ? " SIM\n" : " NAO\n");
+                x = scanner.nextLine();
+            }
+        }
+        criaArqLog();
     }
 
-    static public class Hash {
-        Personagem[] tabela;
-        int m;
+    // Classe no da arvore de inteiros
+    static class No {
+        public int elemento; // Conteudo do no.
+        public No esq; // No da esquerda.
+        public No dir; // No da direita.
+        public No2 outro;
 
-        public Hash() {
-            this(13);
+        No(int elemento) {
+            this.elemento = elemento;
+            this.esq = this.dir = null;
+            this.outro = null;
         }
 
-        public Hash(int m) {
-            this.m = m;
-            this.tabela = new Personagem[this.m];
-            for (int i = 0; i < m; i++) {
-                tabela[i] = null;
-            }
+        No(int elemento, No esq, No dir) {
+            this.elemento = elemento;
+            this.esq = esq;
+            this.dir = dir;
+            this.outro = null;
+        }
+    }
+
+    // Classe no2 da arvore dos personagens
+    static class No2 {
+        public Personagem elemento; // Conteudo do no.
+        public No2 esq; // No da esquerda.
+        public No2 dir; // No da direita.
+
+        No2(Personagem elemento) {
+            this.elemento = elemento;
+            this.esq = this.dir = null;
         }
 
-        public int h(int elemento) {
-            return elemento % m;
+        No2(Personagem elemento, No2 esq, No2 dir) {
+            this.elemento = elemento;
+            this.esq = esq;
+            this.dir = dir;
+        }
+    }
+
+    // Arvore arvore
+    static public class ArvoreArvore {
+        private No raiz; // Raiz da arvore.
+
+        public ArvoreArvore() {
+            raiz = null;
         }
 
-        public int reh(int elemento) {
-            return ++elemento % m;
+        // inserir int na primeira arvore
+        public void inserir(int x) throws Exception {
+            raiz = inserir(x, raiz);
         }
 
-        public boolean inserir(Personagem elemento) {
-            boolean resp = false;
-            if (elemento != null) {
-                int soma = 0;
-                for (int i = 0; i < elemento.getName().length(); i++) {
-                    soma += elemento.getName().charAt(i);
-                }
-                int pos = h(soma);
+        // inserir int na primeira arvore
+        private No inserir(int x, No i) throws Exception {
+            comp++;
+            if (i == null) {
+                i = new No(x);
+            } else {
                 comp++;
-                if (tabela[pos] == null) {
-                    tabela[pos] = elemento;
-                    resp = true;
+                if (x < i.elemento) {
+                    i.esq = inserir(x, i.esq);
                 } else {
-                    pos = reh(soma);
                     comp++;
-                    if (tabela[pos] == null) {
-                        tabela[pos] = elemento;
-                        resp = true;
+                    if (x > i.elemento) {
+                        i.dir = inserir(x, i.dir);
+                    } else {
+                        throw new Exception("Erro ao inserir!");
                     }
                 }
             }
+
+            return i;
+        }
+
+        // Inserir o Personagem
+        public void inserir(Personagem s) throws Exception {
+            inserir(s, raiz);
+        }
+
+        public void inserir(Personagem s, No i) throws Exception {
+            comp++;
+            if (i == null) {
+                throw new Exception("Erro ao inserir: num invalido!");
+
+            } else {
+                comp++;
+                if (s.getYearOfBirth() % 15 < i.elemento) {
+                    inserir(s, i.esq);
+                } else {
+                    comp++;
+                    if (s.getYearOfBirth() % 15 > i.elemento) {
+                        inserir(s, i.dir);
+                    } else {
+                        i.outro = inserir(s, i.outro);
+                    }
+                }
+            }
+        }
+
+        private No2 inserir(Personagem s, No2 i) throws Exception {
+            if (i == null) {
+                i = new No2(s);
+            } else {
+                comp++;
+                if (s.getName().compareTo(i.elemento.getName()) < 0) {
+                    i.esq = inserir(s, i.esq);
+                } else {
+                    comp++;
+                    if (s.getName().compareTo(i.elemento.getName()) > 0) {
+                        i.dir = inserir(s, i.dir);
+                    } else {
+                        throw new Exception("Erro ao inserir: elemento existente!");
+                    }
+                }
+            }
+            return i;
+        }
+
+        // Percorre as duas arvores para procurar o Personagem
+        public boolean pesquisar(String x) {
+            System.out.print(" => raiz");
+            return pesquisar(x, raiz);
+        }
+
+        // Percorre a primeira arvore
+        public boolean pesquisar(String x, No i) {  
+                     
+            if (i == null) {
+                return false;
+            }
+            boolean resp = false;
+            
+            System.out.print(" ESQ");
+            resp = pesquisar(x, i.esq);
+            if (resp == true) {
+                return true;
+            }
+
+            resp = pesquisar(x, i.outro);
+            if (resp == true) {
+                return true;
+            }
+
+            System.out.print(" DIR");
+            resp = pesquisar(x, i.dir);
             return resp;
         }
 
-        public boolean pesquisar(String elemento) {
-            boolean resp = false;
-            int soma = 0;
-            for (int i = 0; i < elemento.length(); i++) {
-                soma += elemento.charAt(i);
-            }
-            int pos = h(soma);
+        // Percorre a segunda arvore procurando o personagem
+        public boolean pesquisar(String x, No2 i) {
+            boolean resp;
             comp++;
-            if (tabela[pos] == null) {
+            if (i == null) {
                 return false;
-            } else {
-                comp++;
-                if (tabela[pos].getName().equals(elemento)) {
-                    System.out.print(" (pos: " + pos + ")");
-                    resp = true;
-                } else {
-                    comp++;
-                    pos = reh(soma);
-                    if (tabela[pos].getName().equals(elemento)) {
-                        System.out.print(" (pos: " + pos + ")");
-                        resp = true;
-                    }
-                }
+            }            
+            comp++;
+            if (i.elemento.getName().compareTo(x) == 0) {
+                return true;
             }
+            System.out.print("->esq");
+            resp=pesquisar(x,i.esq);
+            if(resp==true){
+                return resp;
+            }
+            System.out.print("->dir");
+            resp=pesquisar(x,i.dir);
+            if(resp==true){
+                return resp;
+            }
+
             return resp;
         }
     }
 
     // ---------------------------------------------CriaArqLog---------------------------------------------
-    static void criaArqLog() throws IOException{
-        try{
-            FileWriter writer = new FileWriter("matricula_hashRehash.txt");
-            writer.write("694520\t" + (System.currentTimeMillis() - (inicio / 1000)) + "\t" + comp);
-            writer.close();
-        }catch(IOException e){
-            throw new IOException("Erro para criar log");
-        }
+    static void criaArqLog() {
+
+        Arq.openWrite("matricula_arvoreArvore.txt");
+        Arq.print("694520\t" + (System.currentTimeMillis() - inicio / 1000) + "\t" + comp);
+        Arq.close();
+
     }
 
     // ---------------------------------------------readArq---------------------------------------------
-    public static ArrayList<Personagem> readArq() throws FileNotFoundException {
+    public static ArrayList<Personagem> readArq() {
         String x;
         ArrayList<Personagem> personagens = new ArrayList<>();
-        Scanner scanner1 = null;
-        try {
-            scanner1 = new Scanner(new FileReader("/tmp/characters.csv"));
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Erro ao tentar abrir o arquivo");
-        }
-        x = scanner1.nextLine();
-        while (scanner1.hasNext()) {
-            x = scanner1.nextLine();
+        Arq.openRead("/tmp/characters.csv");
+        x = Arq.readLine();
+        while (Arq.hasNext()) {
+            x = Arq.readLine();
             Personagem personagem = new Personagem();
             x = x.replaceAll(";;", "; ;").replaceAll("\\[", "{").replaceAll("]", "}");
             personagem.ler(x);
             personagens.add(personagem);
-
         }
-        scanner1.close();
+        Arq.close();
         return personagens;
-
     }
 
     // ---------------------------------------------Classe_Personagem---------------------------------------------
