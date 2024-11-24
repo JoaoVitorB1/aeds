@@ -1,2 +1,2 @@
 # aeds2-exs
- exercicios realizados na materias aeds2
+ exercicios realizados na materias aeds
